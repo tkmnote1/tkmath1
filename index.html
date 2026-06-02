@@ -1,317 +1,1511 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kho Kiến Thức Cá Nhân</title>
-
+  <title>Kho Kiến Thức Toán & Lập Trình</title>
   <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --text: #172033;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --border: #e2e8f0;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --math: #7c3aed;
+      --programming: #059669;
+      --warning: #f59e0b;
+      --danger: #dc2626;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      scroll-behavior: smooth;
     }
 
     body {
-      background: #f4f6f8;
-      color: #222;
-      line-height: 1.6;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
     }
 
     header {
-      background: linear-gradient(135deg, #1e293b, #334155);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.35), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.32), transparent 28%),
+        linear-gradient(135deg, #0f172a, #1e293b);
       color: white;
-      padding: 40px 20px;
+      padding: 56px 22px;
       text-align: center;
     }
 
     header h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
+      font-size: clamp(32px, 5vw, 56px);
+      margin-bottom: 14px;
+      letter-spacing: -1px;
     }
 
     header p {
-      font-size: 18px;
+      max-width: 860px;
+      margin: 0 auto 22px;
       color: #cbd5e1;
+      font-size: 18px;
     }
 
-    nav {
-      background: white;
-      padding: 15px 20px;
+    .hero-actions {
       display: flex;
       justify-content: center;
-      gap: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
-    nav a {
+    .btn {
+      display: inline-block;
+      padding: 11px 18px;
+      border-radius: 999px;
       text-decoration: none;
-      color: #1e293b;
-      font-weight: bold;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: white;
+      background: rgba(255,255,255,0.11);
+      backdrop-filter: blur(6px);
     }
 
-    nav a:hover {
-      color: #2563eb;
+    .btn:hover {
+      background: rgba(255,255,255,0.2);
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-
-    .search-box {
-      margin-bottom: 30px;
-    }
-
-    .search-box input {
-      width: 100%;
-      padding: 14px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 16px;
-    }
-
-    .section-title {
-      margin: 30px 0 15px;
-      font-size: 26px;
-      color: #1e293b;
-      border-left: 5px solid #2563eb;
-      padding-left: 10px;
-    }
-
-    .grid {
+    .layout {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 18px;
+      grid-template-columns: 290px 1fr;
+      max-width: 1440px;
+      margin: 0 auto;
+      gap: 22px;
+      padding: 22px;
     }
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
-      transition: 0.25s;
+    aside {
+      position: sticky;
+      top: 16px;
+      height: calc(100vh - 32px);
+      overflow: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
-    }
-
-    .card h3 {
-      color: #2563eb;
-      margin-bottom: 10px;
-    }
-
-    .card p {
-      color: #475569;
+    aside h2 {
+      font-size: 18px;
       margin-bottom: 12px;
+    }
+
+    .search {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 14px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .search:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+
+    .toc a {
+      display: block;
+      padding: 8px 10px;
+      color: #334155;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .toc a:hover {
+      background: #eff6ff;
+      color: var(--primary-dark);
+    }
+
+    main {
+      min-width: 0;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-size: clamp(25px, 3vw, 36px);
+      letter-spacing: -0.5px;
+    }
+
+    h3 {
+      font-size: 22px;
+      margin: 22px 0 10px;
+      color: #0f172a;
+    }
+
+    h4 {
+      font-size: 18px;
+      margin: 18px 0 8px;
+      color: #1e293b;
+    }
+
+    p, li {
+      font-size: 16px;
+      color: #334155;
+    }
+
+    ul, ol {
+      padding-left: 24px;
+      margin: 10px 0;
     }
 
     .tag {
       display: inline-block;
-      background: #e0f2fe;
-      color: #0369a1;
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
       font-size: 13px;
-      margin-right: 5px;
+      font-weight: 700;
+      background: #eff6ff;
+      color: var(--primary-dark);
+      margin: 3px;
+    }
+
+    .math-tag {
+      background: #f3e8ff;
+      color: var(--math);
+    }
+
+    .prog-tag {
+      background: #dcfce7;
+      color: var(--programming);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      background: #ffffff;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: var(--primary-dark);
+    }
+
+    .note {
+      border-left: 5px solid var(--primary);
+      background: #eff6ff;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin: 14px 0;
+    }
+
+    .warning {
+      border-left-color: var(--warning);
+      background: #fffbeb;
+    }
+
+    .danger {
+      border-left-color: var(--danger);
+      background: #fef2f2;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    code {
+      font-family: Consolas, Monaco, monospace;
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 5px;
+      border-radius: 5px;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      padding: 16px;
+      border-radius: 14px;
+      overflow: auto;
+      margin: 12px 0;
+      border: 1px solid #334155;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .formula {
+      font-family: "Times New Roman", serif;
+      font-size: 19px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 12px 0;
+    }
+
+    .checklist li {
+      list-style: "✓  ";
+      margin-left: 8px;
     }
 
     footer {
       text-align: center;
-      margin-top: 50px;
-      padding: 25px;
-      background: #1e293b;
-      color: #cbd5e1;
+      padding: 28px;
+      color: var(--muted);
     }
 
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 28px;
+    mark {
+      background: #fef08a;
+      padding: 2px 3px;
+      border-radius: 4px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 940px) {
+      .layout {
+        grid-template-columns: 1fr;
       }
 
-      nav {
-        flex-wrap: wrap;
-        gap: 12px;
+      aside {
+        position: static;
+        height: auto;
+      }
+
+      .toc {
+        columns: 2;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .layout {
+        padding: 12px;
+      }
+
+      section {
+        padding: 20px;
+      }
+
+      .toc {
+        columns: 1;
       }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <h1>Kho Kiến Thức Cá Nhân</h1>
-    <p>Nơi lưu lại ghi chú học tập, lập trình, toán học và kinh nghiệm cá nhân</p>
+  <header id="top">
+    <h1>Kho Kiến Thức Toán & Lập Trình</h1>
+    <p>
+      Trang web cá nhân để lưu lại kiến thức nền tảng, công thức quan trọng, tư duy giải bài,
+      thuật toán, cấu trúc dữ liệu và ghi chú lập trình. Có thể đưa trực tiếp lên GitHub Pages.
+    </p>
+    <div class="hero-actions">
+      <a class="btn" href="#math-overview">Bắt đầu với Toán</a>
+      <a class="btn" href="#programming-overview">Bắt đầu với Lập trình</a>
+      <a class="btn" href="#github-pages">Cách đăng lên GitHub</a>
+    </div>
   </header>
 
-  <nav>
-    <a href="#lap-trinh">Lập trình</a>
-    <a href="#ctdl">Cấu trúc dữ liệu</a>
-    <a href="#toan">Toán học</a>
-    <a href="#devops">DevOps</a>
-  </nav>
+  <div class="layout">
+    <aside>
+      <h2>Mục lục nhanh</h2>
+      <input class="search" id="searchInput" placeholder="Tìm: ma trận, con trỏ, stack..." />
+      <nav class="toc">
+        <a href="#math-overview">1. Tổng quan Toán học</a>
+        <a href="#linear-algebra">2. Đại số tuyến tính</a>
+        <a href="#calculus">3. Giải tích</a>
+        <a href="#discrete-math">4. Toán rời rạc</a>
+        <a href="#probability">5. Xác suất - Thống kê</a>
+        <a href="#ode">6. Phương trình vi phân</a>
+        <a href="#programming-overview">7. Tổng quan lập trình</a>
+        <a href="#c-programming">8. Lập trình C</a>
+        <a href="#cpp-programming">9. C++ và OOP</a>
+        <a href="#data-structures">10. Cấu trúc dữ liệu</a>
+        <a href="#algorithms">11. Thuật toán</a>
+        <a href="#web-dev">12. Web cơ bản</a>
+        <a href="#database">13. Cơ sở dữ liệu</a>
+        <a href="#git-devops">14. Git & DevOps</a>
+        <a href="#learning-method">15. Cách học và ghi chú</a>
+        <a href="#github-pages">16. Đưa lên GitHub Pages</a>
+      </nav>
+    </aside>
 
-  <main class="container">
-    <div class="search-box">
-      <input 
-        type="text" 
-        id="searchInput" 
-        placeholder="Tìm kiếm kiến thức, ví dụ: con trỏ, stack, ma trận..."
-      />
-    </div>
-
-    <section id="lap-trinh">
-      <h2 class="section-title">Lập trình C/C++</h2>
-
-      <div class="grid">
-        <div class="card">
-          <h3>Con trỏ trong C</h3>
-          <p>
-            Con trỏ là biến dùng để lưu địa chỉ của một biến khác.
-            Đây là kiến thức quan trọng khi học cấp phát động, mảng và danh sách liên kết.
-          </p>
-          <span class="tag">C</span>
-          <span class="tag">Pointer</span>
+    <main id="content">
+      <section id="math-overview" class="knowledge-section">
+        <div class="section-header">
+          <h2>1. Tổng quan Toán học</h2>
+          <div><span class="tag math-tag">Math</span><span class="tag">Foundation</span></div>
         </div>
 
-        <div class="card">
-          <h3>Mảng một chiều</h3>
-          <p>
-            Mảng là cấu trúc lưu nhiều phần tử cùng kiểu dữ liệu trên vùng nhớ liên tiếp.
-            Có thể dùng để lưu danh sách điểm, danh sách số nguyên, dữ liệu thống kê.
-          </p>
-          <span class="tag">Array</span>
-          <span class="tag">Basic</span>
+        <p>
+          Toán học trong học tập và lập trình không chỉ là công thức. Điều quan trọng hơn là
+          khả năng mô hình hóa vấn đề, suy luận logic, chứng minh đúng sai và biến bài toán
+          thực tế thành dạng có thể tính toán được.
+        </p>
+
+        <div class="grid">
+          <div class="card">
+            <h3>Đại số tuyến tính</h3>
+            <p>Vector, ma trận, hệ phương trình tuyến tính, không gian vector, trị riêng, vector riêng, SVD.</p>
+          </div>
+          <div class="card">
+            <h3>Giải tích</h3>
+            <p>Giới hạn, đạo hàm, tích phân, đạo hàm riêng, cực trị, tối ưu hóa.</p>
+          </div>
+          <div class="card">
+            <h3>Toán rời rạc</h3>
+            <p>Mệnh đề, tập hợp, quan hệ, hàm, quy nạp, tổ hợp, đồ thị.</p>
+          </div>
+          <div class="card">
+            <h3>Xác suất - Thống kê</h3>
+            <p>Biến cố, xác suất có điều kiện, kỳ vọng, phương sai, phân phối, ước lượng.</p>
+          </div>
         </div>
 
-        <div class="card">
-          <h3>Chuỗi ký tự</h3>
-          <p>
-            Trong C, chuỗi là mảng ký tự kết thúc bằng ký tự '\0'.
-            Cần chú ý kích thước mảng khi nhập chuỗi để tránh tràn bộ nhớ.
-          </p>
-          <span class="tag">String</span>
-          <span class="tag">C</span>
-        </div>
-      </div>
-    </section>
+        <h3>Cách ghi nhớ kiến thức toán</h3>
+        <ul class="checklist">
+          <li>Ghi rõ định nghĩa trước khi ghi công thức.</li>
+          <li>Mỗi định lý nên có ví dụ đúng và ví dụ sai.</li>
+          <li>Với công thức, cần biết điều kiện áp dụng.</li>
+          <li>Nên có mục “lỗi thường gặp” cho từng chủ đề.</li>
+        </ul>
+      </section>
 
-    <section id="ctdl">
-      <h2 class="section-title">Cấu trúc dữ liệu</h2>
-
-      <div class="grid">
-        <div class="card">
-          <h3>Danh sách liên kết đơn</h3>
-          <p>
-            Danh sách liên kết đơn gồm nhiều node, mỗi node chứa dữ liệu và con trỏ trỏ đến node kế tiếp.
-            Ưu điểm là thêm/xóa linh hoạt, không cần vùng nhớ liên tiếp.
-          </p>
-          <span class="tag">Linked List</span>
-          <span class="tag">Node</span>
+      <section id="linear-algebra" class="knowledge-section">
+        <div class="section-header">
+          <h2>2. Đại số tuyến tính</h2>
+          <div><span class="tag math-tag">Vector</span><span class="tag math-tag">Matrix</span></div>
         </div>
 
-        <div class="card">
-          <h3>Stack</h3>
-          <p>
-            Stack hoạt động theo nguyên tắc LIFO: phần tử vào sau sẽ ra trước.
-            Ứng dụng trong kiểm tra dấu ngoặc, khử đệ quy, undo/redo.
-          </p>
-          <span class="tag">Stack</span>
-          <span class="tag">LIFO</span>
+        <h3>2.1. Vector</h3>
+        <p>
+          Vector có thể hiểu là một đối tượng có độ lớn và hướng. Trong đại số tuyến tính,
+          vector thường được biểu diễn dưới dạng cột hoặc hàng.
+        </p>
+
+        <div class="formula">
+          v = (v<sub>1</sub>, v<sub>2</sub>, ..., v<sub>n</sub>)
         </div>
 
-        <div class="card">
-          <h3>Queue</h3>
-          <p>
-            Queue hoạt động theo nguyên tắc FIFO: phần tử vào trước sẽ ra trước.
-            Ứng dụng trong hàng đợi xử lý tác vụ, BFS, mô phỏng hệ thống.
-          </p>
-          <span class="tag">Queue</span>
-          <span class="tag">FIFO</span>
-        </div>
-      </div>
-    </section>
+        <table>
+          <tr>
+            <th>Khái niệm</th>
+            <th>Ý nghĩa</th>
+            <th>Ví dụ</th>
+          </tr>
+          <tr>
+            <td>Vector không</td>
+            <td>Vector có tất cả tọa độ bằng 0.</td>
+            <td>(0, 0, 0)</td>
+          </tr>
+          <tr>
+            <td>Tổ hợp tuyến tính</td>
+            <td>Kết hợp các vector bằng phép nhân vô hướng và cộng.</td>
+            <td>u = 2v<sub>1</sub> - 3v<sub>2</sub></td>
+          </tr>
+          <tr>
+            <td>Độc lập tuyến tính</td>
+            <td>Không vector nào biểu diễn được qua các vector còn lại.</td>
+            <td>Hai vector không cùng phương trong R².</td>
+          </tr>
+        </table>
 
-    <section id="toan">
-      <h2 class="section-title">Toán học</h2>
+        <h3>2.2. Ma trận</h3>
+        <p>
+          Ma trận là bảng số gồm hàng và cột. Trong lập trình, ma trận có thể được lưu bằng mảng hai chiều.
+          Trong toán, ma trận biểu diễn phép biến đổi tuyến tính hoặc hệ phương trình tuyến tính.
+        </p>
 
-      <div class="grid">
-        <div class="card">
-          <h3>Ma trận</h3>
-          <p>
-            Ma trận là bảng số gồm các hàng và cột.
-            Trong lập trình và machine learning, ma trận dùng để biểu diễn dữ liệu, phép biến đổi và hệ phương trình.
-          </p>
-          <span class="tag">Linear Algebra</span>
-          <span class="tag">Matrix</span>
-        </div>
-
-        <div class="card">
-          <h3>Không gian vector</h3>
-          <p>
-            Không gian vector là tập hợp các vector thỏa mãn phép cộng và nhân vô hướng.
-            Đây là nền tảng của đại số tuyến tính.
-          </p>
-          <span class="tag">Vector</span>
-          <span class="tag">Math</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="devops">
-      <h2 class="section-title">DevOps</h2>
-
-      <div class="grid">
-        <div class="card">
-          <h3>Git cơ bản</h3>
-          <p>
-            Git giúp quản lý phiên bản mã nguồn.
-            Các lệnh quan trọng gồm git init, git add, git commit, git push và git pull.
-          </p>
-          <span class="tag">Git</span>
-          <span class="tag">Version Control</span>
+        <div class="formula">
+          A = [a<sub>ij</sub>]<sub>m×n</sub>
         </div>
 
-        <div class="card">
-          <h3>Docker</h3>
-          <p>
-            Docker giúp đóng gói ứng dụng cùng môi trường chạy vào container.
-            Điều này giúp ứng dụng chạy ổn định trên nhiều máy khác nhau.
-          </p>
-          <span class="tag">Docker</span>
-          <span class="tag">Container</span>
+        <h4>Các phép toán cơ bản</h4>
+        <ul>
+          <li>Cộng ma trận: hai ma trận phải cùng kích thước.</li>
+          <li>Nhân ma trận với số: nhân từng phần tử với số đó.</li>
+          <li>Nhân hai ma trận: nếu A có kích thước m×n và B có kích thước n×p thì AB có kích thước m×p.</li>
+          <li>Ma trận chuyển vị: đổi hàng thành cột.</li>
+        </ul>
+
+        <pre><code>// Cộng hai ma trận A và B kích thước m x n trong C
+for (int i = 0; i < m; i++) {
+    for (int j = 0; j < n; j++) {
+        C[i][j] = A[i][j] + B[i][j];
+    }
+}</code></pre>
+
+        <h3>2.3. Hệ phương trình tuyến tính</h3>
+        <p>Hệ tuyến tính thường được viết dưới dạng:</p>
+        <div class="formula">
+          Ax = b
         </div>
-      </div>
-    </section>
-  </main>
+        <p>
+          Trong đó A là ma trận hệ số, x là vector ẩn, b là vector vế phải.
+          Bài toán là tìm x sao cho phương trình đúng.
+        </p>
+
+        <h3>2.4. Trị riêng và vector riêng</h3>
+        <p>
+          Nếu A là ma trận vuông, một vector khác 0 gọi là vector riêng của A nếu sau khi nhân với A,
+          nó chỉ bị co giãn chứ không đổi hướng.
+        </p>
+        <div class="formula">
+          Av = λv, với v ≠ 0
+        </div>
+
+        <div class="note">
+          <strong>Ý nghĩa:</strong> trị riêng cho biết hệ số co giãn theo một hướng đặc biệt,
+          vector riêng cho biết hướng đặc biệt đó.
+        </div>
+
+        <h3>2.5. Không gian Euclid và hình chiếu</h3>
+        <p>
+          Trong R<sup>n</sup> với tích vô hướng chính tắc, hình chiếu trực giao của vector u lên không gian con W
+          là vector thuộc W gần u nhất.
+        </p>
+        <div class="formula">
+          d(u, W) = ||u - pr<sub>W</sub>(u)||
+        </div>
+
+        <h3>2.6. Dạng toàn phương</h3>
+        <p>Dạng toàn phương thường có dạng:</p>
+        <div class="formula">
+          Q(x) = x<sup>T</sup> A x
+        </div>
+        <p>
+          Nếu A đối xứng, ta có thể chéo hóa trực giao để đưa Q về dạng chính tắc.
+          Dạng toàn phương dùng để xét dấu, cực trị và hình học bậc hai.
+        </p>
+      </section>
+
+      <section id="calculus" class="knowledge-section">
+        <div class="section-header">
+          <h2>3. Giải tích</h2>
+          <div><span class="tag math-tag">Limit</span><span class="tag math-tag">Derivative</span></div>
+        </div>
+
+        <h3>3.1. Giới hạn</h3>
+        <p>
+          Giới hạn mô tả giá trị mà hàm số tiến tới khi biến tiến tới một điểm nào đó.
+          Đây là nền tảng để định nghĩa đạo hàm và tích phân.
+        </p>
+        <div class="formula">
+          lim<sub>x→a</sub> f(x) = L
+        </div>
+
+        <h3>3.2. Đạo hàm</h3>
+        <p>
+          Đạo hàm đo tốc độ thay đổi tức thời của hàm số. Về hình học, đạo hàm là hệ số góc của tiếp tuyến.
+        </p>
+        <div class="formula">
+          f'(x) = lim<sub>h→0</sub> [f(x+h)-f(x)] / h
+        </div>
+
+        <table>
+          <tr>
+            <th>Hàm số</th>
+            <th>Đạo hàm</th>
+          </tr>
+          <tr>
+            <td>x<sup>n</sup></td>
+            <td>n x<sup>n-1</sup></td>
+          </tr>
+          <tr>
+            <td>sin x</td>
+            <td>cos x</td>
+          </tr>
+          <tr>
+            <td>cos x</td>
+            <td>-sin x</td>
+          </tr>
+          <tr>
+            <td>e<sup>x</sup></td>
+            <td>e<sup>x</sup></td>
+          </tr>
+          <tr>
+            <td>ln x</td>
+            <td>1/x</td>
+          </tr>
+        </table>
+
+        <h3>3.3. Đạo hàm riêng</h3>
+        <p>
+          Với hàm nhiều biến f(x, y), đạo hàm riêng theo x là đạo hàm khi xem y là hằng số.
+        </p>
+        <div class="formula">
+          ∂f/∂x, ∂f/∂y
+        </div>
+
+        <h3>3.4. Cực trị nhiều biến</h3>
+        <p>
+          Điểm dừng của f(x, y) thỏa:
+        </p>
+        <div class="formula">
+          f<sub>x</sub>(x, y) = 0 và f<sub>y</sub>(x, y) = 0
+        </div>
+
+        <p>
+          Sau đó dùng Hessian để phân loại cực trị:
+        </p>
+        <div class="formula">
+          H = [[f<sub>xx</sub>, f<sub>xy</sub>], [f<sub>yx</sub>, f<sub>yy</sub>]]
+        </div>
+
+        <table>
+          <tr>
+            <th>Điều kiện</th>
+            <th>Kết luận</th>
+          </tr>
+          <tr>
+            <td>det(H) &gt; 0 và f<sub>xx</sub> &gt; 0</td>
+            <td>Cực tiểu địa phương</td>
+          </tr>
+          <tr>
+            <td>det(H) &gt; 0 và f<sub>xx</sub> &lt; 0</td>
+            <td>Cực đại địa phương</td>
+          </tr>
+          <tr>
+            <td>det(H) &lt; 0</td>
+            <td>Điểm yên ngựa</td>
+          </tr>
+        </table>
+
+        <h3>3.5. Tích phân</h3>
+        <p>
+          Tích phân bất định dùng để tìm nguyên hàm. Tích phân xác định dùng để tính diện tích có dấu,
+          tổng tích lũy hoặc đại lượng vật lý.
+        </p>
+        <div class="formula">
+          ∫ f(x) dx = F(x) + C, với F'(x) = f(x)
+        </div>
+      </section>
+
+      <section id="discrete-math" class="knowledge-section">
+        <div class="section-header">
+          <h2>4. Toán rời rạc</h2>
+          <div><span class="tag math-tag">Logic</span><span class="tag math-tag">Graph</span></div>
+        </div>
+
+        <h3>4.1. Mệnh đề logic</h3>
+        <p>
+          Mệnh đề là câu khẳng định có giá trị đúng hoặc sai. Logic mệnh đề là nền tảng của lập trình điều kiện.
+        </p>
+
+        <table>
+          <tr>
+            <th>Ký hiệu</th>
+            <th>Ý nghĩa</th>
+            <th>Liên hệ lập trình</th>
+          </tr>
+          <tr>
+            <td>¬P</td>
+            <td>Phủ định P</td>
+            <td>!P</td>
+          </tr>
+          <tr>
+            <td>P ∧ Q</td>
+            <td>P và Q</td>
+            <td>P && Q</td>
+          </tr>
+          <tr>
+            <td>P ∨ Q</td>
+            <td>P hoặc Q</td>
+            <td>P || Q</td>
+          </tr>
+          <tr>
+            <td>P ⇒ Q</td>
+            <td>Nếu P thì Q</td>
+            <td>if (P) then Q</td>
+          </tr>
+        </table>
+
+        <h3>4.2. Quy nạp toán học</h3>
+        <p>
+          Quy nạp dùng để chứng minh mệnh đề đúng với mọi số tự nhiên.
+        </p>
+        <ol>
+          <li>Chứng minh mệnh đề đúng với n = n<sub>0</sub>.</li>
+          <li>Giả sử đúng với n = k.</li>
+          <li>Chứng minh đúng với n = k + 1.</li>
+        </ol>
+
+        <h3>4.3. Tổ hợp</h3>
+        <div class="formula">
+          P(n, k) = n! / (n-k)!<br>
+          C(n, k) = n! / [k!(n-k)!]
+        </div>
+
+        <h3>4.4. Đồ thị</h3>
+        <p>
+          Đồ thị gồm tập đỉnh và tập cạnh. Trong lập trình, đồ thị dùng để mô hình hóa mạng xã hội,
+          bản đồ đường đi, quan hệ phụ thuộc, cây thư mục.
+        </p>
+        <ul>
+          <li>Đồ thị vô hướng: cạnh không có chiều.</li>
+          <li>Đồ thị có hướng: cạnh có chiều.</li>
+          <li>Đường đi: dãy đỉnh liên tiếp nhau thông qua cạnh.</li>
+          <li>Chu trình: đường đi bắt đầu và kết thúc ở cùng một đỉnh.</li>
+        </ul>
+      </section>
+
+      <section id="probability" class="knowledge-section">
+        <div class="section-header">
+          <h2>5. Xác suất - Thống kê</h2>
+          <div><span class="tag math-tag">Probability</span><span class="tag math-tag">Statistics</span></div>
+        </div>
+
+        <h3>5.1. Xác suất</h3>
+        <p>
+          Xác suất đo mức độ có thể xảy ra của một biến cố.
+        </p>
+        <div class="formula">
+          P(A) = số kết quả thuận lợi / tổng số kết quả có thể
+        </div>
+
+        <h3>5.2. Xác suất có điều kiện</h3>
+        <div class="formula">
+          P(A|B) = P(A ∩ B) / P(B), với P(B) ≠ 0
+        </div>
+
+        <h3>5.3. Kỳ vọng và phương sai</h3>
+        <p>
+          Kỳ vọng là giá trị trung bình lý thuyết của biến ngẫu nhiên.
+          Phương sai đo mức độ phân tán quanh kỳ vọng.
+        </p>
+        <div class="formula">
+          E(X) = Σ x P(X=x)<br>
+          Var(X) = E[(X - E(X))²]
+        </div>
+
+        <h3>5.4. Thống kê mô tả</h3>
+        <table>
+          <tr>
+            <th>Đại lượng</th>
+            <th>Ý nghĩa</th>
+          </tr>
+          <tr>
+            <td>Mean</td>
+            <td>Giá trị trung bình.</td>
+          </tr>
+          <tr>
+            <td>Median</td>
+            <td>Trung vị, giá trị nằm giữa khi sắp xếp dữ liệu.</td>
+          </tr>
+          <tr>
+            <td>Mode</td>
+            <td>Giá trị xuất hiện nhiều nhất.</td>
+          </tr>
+          <tr>
+            <td>Standard deviation</td>
+            <td>Độ lệch chuẩn, căn bậc hai của phương sai.</td>
+          </tr>
+        </table>
+      </section>
+
+      <section id="ode" class="knowledge-section">
+        <div class="section-header">
+          <h2>6. Phương trình vi phân</h2>
+          <div><span class="tag math-tag">ODE</span><span class="tag math-tag">System</span></div>
+        </div>
+
+        <h3>6.1. Phương trình vi phân là gì?</h3>
+        <p>
+          Phương trình vi phân là phương trình chứa hàm chưa biết và đạo hàm của nó.
+          Nó dùng để mô hình hóa chuyển động, tăng trưởng, dao động, mạch điện, lan truyền nhiệt.
+        </p>
+
+        <h3>6.2. Hệ tuyến tính không thuần nhất</h3>
+        <p>Dạng tổng quát:</p>
+        <div class="formula">
+          y'(x) = A(x)y(x) + g(x)
+        </div>
+
+        <h3>6.3. Phương pháp biến thiên tham số</h3>
+        <ol>
+          <li>Giải hệ thuần nhất: y<sub>h</sub> = Y(x)c.</li>
+          <li>Lập ma trận nghiệm cơ bản Y(x) từ các nghiệm cột của hệ thuần nhất.</li>
+          <li>Đặt nghiệm riêng: y<sub>p</sub> = Y(x)u(x).</li>
+          <li>Suy ra Y(x)u'(x) = g(x), nên u'(x) = Y(x)<sup>-1</sup>g(x).</li>
+          <li>Tích phân để tìm u(x), rồi kết luận y = y<sub>h</sub> + y<sub>p</sub>.</li>
+        </ol>
+
+        <pre><code>Quy trình ghi lời giải:
+1. Tìm nghiệm tổng quát hệ thuần nhất.
+2. Chọn ma trận nghiệm cơ bản Y(x).
+3. Đặt y_p = Y(x)u(x).
+4. Giải Y(x)u'(x) = g(x).
+5. Tích phân u'(x).
+6. Kết luận nghiệm tổng quát.</code></pre>
+      </section>
+
+      <section id="programming-overview" class="knowledge-section">
+        <div class="section-header">
+          <h2>7. Tổng quan Lập trình</h2>
+          <div><span class="tag prog-tag">Programming</span><span class="tag">Mindset</span></div>
+        </div>
+
+        <p>
+          Lập trình là quá trình mô tả lời giải bài toán bằng ngôn ngữ mà máy tính có thể thực thi.
+          Một lập trình viên tốt không chỉ biết cú pháp, mà còn biết phân tích bài toán, thiết kế dữ liệu,
+          kiểm thử và sửa lỗi.
+        </p>
+
+        <h3>7.1. Quy trình giải bài lập trình</h3>
+        <ol>
+          <li>Đọc kỹ đề, xác định input và output.</li>
+          <li>Phân tích ràng buộc: số lượng dữ liệu, kiểu dữ liệu, giới hạn thời gian.</li>
+          <li>Chọn cấu trúc dữ liệu phù hợp.</li>
+          <li>Viết thuật toán bằng lời hoặc pseudo-code.</li>
+          <li>Code từng phần nhỏ và kiểm thử.</li>
+          <li>Xử lý trường hợp biên.</li>
+        </ol>
+
+        <h3>7.2. Lỗi thường gặp</h3>
+        <table>
+          <tr>
+            <th>Lỗi</th>
+            <th>Nguyên nhân</th>
+            <th>Cách tránh</th>
+          </tr>
+          <tr>
+            <td>Runtime error</td>
+            <td>Truy cập mảng sai chỉ số, con trỏ NULL, chia cho 0.</td>
+            <td>Kiểm tra điều kiện trước khi truy cập.</td>
+          </tr>
+          <tr>
+            <td>Wrong answer</td>
+            <td>Logic sai hoặc thiếu trường hợp biên.</td>
+            <td>Test với dữ liệu nhỏ, dữ liệu cực trị.</td>
+          </tr>
+          <tr>
+            <td>Time limit exceeded</td>
+            <td>Thuật toán quá chậm.</td>
+            <td>Tối ưu độ phức tạp.</td>
+          </tr>
+        </table>
+      </section>
+
+      <section id="c-programming" class="knowledge-section">
+        <div class="section-header">
+          <h2>8. Lập trình C</h2>
+          <div><span class="tag prog-tag">C</span><span class="tag prog-tag">Pointer</span></div>
+        </div>
+
+        <h3>8.1. Biến và kiểu dữ liệu</h3>
+        <table>
+          <tr>
+            <th>Kiểu</th>
+            <th>Ý nghĩa</th>
+            <th>Ví dụ</th>
+          </tr>
+          <tr>
+            <td>int</td>
+            <td>Số nguyên</td>
+            <td>int age = 20;</td>
+          </tr>
+          <tr>
+            <td>float</td>
+            <td>Số thực độ chính xác đơn</td>
+            <td>float x = 3.14f;</td>
+          </tr>
+          <tr>
+            <td>double</td>
+            <td>Số thực độ chính xác kép</td>
+            <td>double pi = 3.14159;</td>
+          </tr>
+          <tr>
+            <td>char</td>
+            <td>Ký tự</td>
+            <td>char c = 'A';</td>
+          </tr>
+        </table>
+
+        <h3>8.2. Cấu trúc điều kiện</h3>
+        <pre><code>if (condition) {
+    // chạy khi condition đúng
+} else {
+    // chạy khi condition sai
+}</code></pre>
+
+        <h3>8.3. Vòng lặp</h3>
+        <pre><code>for (int i = 0; i < n; i++) {
+    printf("%d ", i);
+}
+
+while (condition) {
+    // lặp khi condition còn đúng
+}</code></pre>
+
+        <h3>8.4. Mảng</h3>
+        <p>
+          Mảng là tập hợp nhiều phần tử cùng kiểu, nằm liên tiếp trong bộ nhớ.
+        </p>
+        <pre><code>int a[5] = {1, 2, 3, 4, 5};
+
+for (int i = 0; i < 5; i++) {
+    printf("%d ", a[i]);
+}</code></pre>
+
+        <h3>8.5. Chuỗi ký tự</h3>
+        <p>
+          Trong C, chuỗi là mảng ký tự kết thúc bởi ký tự null <code>'\0'</code>.
+        </p>
+        <pre><code>char name[50];
+fgets(name, sizeof(name), stdin);</code></pre>
+
+        <div class="warning note">
+          <strong>Lưu ý:</strong> Không nên dùng <code>gets()</code> vì dễ gây tràn bộ nhớ.
+          Khi nhập chuỗi nên dùng <code>fgets()</code>.
+        </div>
+
+        <h3>8.6. Con trỏ</h3>
+        <p>
+          Con trỏ là biến lưu địa chỉ của biến khác.
+        </p>
+        <pre><code>int x = 10;
+int *p = &x;
+
+printf("Gia tri x = %d\n", x);
+printf("Dia chi x = %p\n", &x);
+printf("Gia tri p tro toi = %d\n", *p);</code></pre>
+
+        <table>
+          <tr>
+            <th>Ký hiệu</th>
+            <th>Ý nghĩa</th>
+          </tr>
+          <tr>
+            <td>&x</td>
+            <td>Lấy địa chỉ của biến x.</td>
+          </tr>
+          <tr>
+            <td>*p</td>
+            <td>Lấy giá trị tại địa chỉ mà p đang trỏ tới.</td>
+          </tr>
+          <tr>
+            <td>int *p</td>
+            <td>Khai báo p là con trỏ tới int.</td>
+          </tr>
+        </table>
+
+        <h3>8.7. Cấp phát động</h3>
+        <pre><code>int *a = (int*) malloc(n * sizeof(int));
+
+if (a == NULL) {
+    printf("Khong du bo nho");
+    return 1;
+}
+
+free(a);</code></pre>
+
+        <h3>8.8. Struct</h3>
+        <pre><code>typedef struct {
+    char id[20];
+    char name[50];
+    float gpa;
+} Student;</code></pre>
+      </section>
+
+      <section id="cpp-programming" class="knowledge-section">
+        <div class="section-header">
+          <h2>9. C++ và Lập trình hướng đối tượng</h2>
+          <div><span class="tag prog-tag">C++</span><span class="tag prog-tag">OOP</span></div>
+        </div>
+
+        <h3>9.1. Khác biệt cơ bản giữa C và C++</h3>
+        <table>
+          <tr>
+            <th>C</th>
+            <th>C++</th>
+          </tr>
+          <tr>
+            <td>Thiên về lập trình thủ tục.</td>
+            <td>Hỗ trợ lập trình thủ tục, hướng đối tượng và generic programming.</td>
+          </tr>
+          <tr>
+            <td>Dùng printf, scanf.</td>
+            <td>Dùng cout, cin.</td>
+          </tr>
+          <tr>
+            <td>Quản lý bộ nhớ bằng malloc/free.</td>
+            <td>Có new/delete, STL, smart pointer.</td>
+          </tr>
+        </table>
+
+        <h3>9.2. Class và Object</h3>
+        <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+class Student {
+private:
+    string name;
+    double gpa;
+
+public:
+    Student(string name, double gpa) {
+        this-&gt;name = name;
+        this-&gt;gpa = gpa;
+    }
+
+    void printInfo() {
+        cout &lt;&lt; name &lt;&lt; " - " &lt;&lt; gpa &lt;&lt; endl;
+    }
+};</code></pre>
+
+        <h3>9.3. Bốn tính chất OOP</h3>
+        <div class="grid">
+          <div class="card">
+            <h3>Đóng gói</h3>
+            <p>Ẩn dữ liệu bên trong class, truy cập thông qua phương thức.</p>
+          </div>
+          <div class="card">
+            <h3>Kế thừa</h3>
+            <p>Class con có thể tái sử dụng thuộc tính và phương thức của class cha.</p>
+          </div>
+          <div class="card">
+            <h3>Đa hình</h3>
+            <p>Cùng một lời gọi hàm nhưng có thể thực thi khác nhau tùy đối tượng.</p>
+          </div>
+          <div class="card">
+            <h3>Trừu tượng</h3>
+            <p>Chỉ tập trung vào đặc điểm cần thiết, bỏ qua chi tiết không quan trọng.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="data-structures" class="knowledge-section">
+        <div class="section-header">
+          <h2>10. Cấu trúc dữ liệu</h2>
+          <div><span class="tag prog-tag">DSA</span><span class="tag prog-tag">Data Structure</span></div>
+        </div>
+
+        <h3>10.1. Mảng</h3>
+        <p>
+          Mảng phù hợp khi số lượng phần tử tương đối cố định và cần truy cập nhanh theo chỉ số.
+        </p>
+
+        <h3>10.2. Danh sách liên kết đơn</h3>
+        <p>
+          Danh sách liên kết đơn gồm nhiều node. Mỗi node chứa dữ liệu và địa chỉ node kế tiếp.
+        </p>
+        <pre><code>typedef struct Node {
+    int data;
+    struct Node *next;
+} Node;</code></pre>
+
+        <h4>Thêm node vào đầu danh sách</h4>
+        <pre><code>void pushFront(Node **head, int value) {
+    Node *newNode = (Node*) malloc(sizeof(Node));
+    newNode-&gt;data = value;
+    newNode-&gt;next = *head;
+    *head = newNode;
+}</code></pre>
+
+        <h3>10.3. Stack</h3>
+        <p>
+          Stack hoạt động theo nguyên tắc LIFO: vào sau ra trước.
+        </p>
+        <ul>
+          <li>push: thêm phần tử.</li>
+          <li>pop: lấy phần tử trên cùng ra.</li>
+          <li>top/peek: xem phần tử trên cùng.</li>
+        </ul>
+
+        <h3>10.4. Queue</h3>
+        <p>
+          Queue hoạt động theo nguyên tắc FIFO: vào trước ra trước.
+        </p>
+
+        <h3>10.5. Cây nhị phân tìm kiếm</h3>
+        <p>
+          Với BST thông thường, node bên trái nhỏ hơn node cha, node bên phải lớn hơn node cha.
+          Nếu có phần tử bằng nhau, phải quy ước rõ: không cho trùng, hoặc cho trùng về trái/phải.
+        </p>
+
+        <pre><code>typedef struct TreeNode {
+    int key;
+    struct TreeNode *left;
+    struct TreeNode *right;
+} TreeNode;</code></pre>
+
+        <h4>Xóa node có 2 con</h4>
+        <ol>
+          <li>Tìm node cần xóa.</li>
+          <li>Tìm node thế mạng: thường là phần tử nhỏ nhất ở cây con phải hoặc lớn nhất ở cây con trái.</li>
+          <li>Chép giá trị node thế mạng vào node cần xóa.</li>
+          <li>Xóa node thế mạng.</li>
+        </ol>
+      </section>
+
+      <section id="algorithms" class="knowledge-section">
+        <div class="section-header">
+          <h2>11. Thuật toán</h2>
+          <div><span class="tag prog-tag">Algorithm</span><span class="tag prog-tag">Complexity</span></div>
+        </div>
+
+        <h3>11.1. Độ phức tạp thuật toán</h3>
+        <p>
+          Độ phức tạp giúp ước lượng thuật toán chạy nhanh hay chậm khi kích thước dữ liệu tăng.
+        </p>
+
+        <table>
+          <tr>
+            <th>Ký hiệu</th>
+            <th>Ý nghĩa</th>
+            <th>Ví dụ</th>
+          </tr>
+          <tr>
+            <td>O(1)</td>
+            <td>Thời gian hằng số</td>
+            <td>Truy cập a[i]</td>
+          </tr>
+          <tr>
+            <td>O(log n)</td>
+            <td>Tăng rất chậm</td>
+            <td>Tìm kiếm nhị phân</td>
+          </tr>
+          <tr>
+            <td>O(n)</td>
+            <td>Duyệt qua n phần tử</td>
+            <td>Tìm max trong mảng</td>
+          </tr>
+          <tr>
+            <td>O(n²)</td>
+            <td>Hai vòng lặp lồng nhau</td>
+            <td>Bubble sort</td>
+          </tr>
+        </table>
+
+        <h3>11.2. Tìm kiếm tuyến tính</h3>
+        <pre><code>int linearSearch(int a[], int n, int x) {
+    for (int i = 0; i < n; i++) {
+        if (a[i] == x) return i;
+    }
+    return -1;
+}</code></pre>
+
+        <h3>11.3. Tìm kiếm nhị phân</h3>
+        <p>
+          Áp dụng khi mảng đã được sắp xếp.
+        </p>
+        <pre><code>int binarySearch(int a[], int n, int x) {
+    int left = 0, right = n - 1;
+
+    while (left &lt;= right) {
+        int mid = left + (right - left) / 2;
+
+        if (a[mid] == x) return mid;
+        if (a[mid] &lt; x) left = mid + 1;
+        else right = mid - 1;
+    }
+
+    return -1;
+}</code></pre>
+
+        <h3>11.4. Sắp xếp nổi bọt</h3>
+        <pre><code>void bubbleSort(int a[], int n) {
+    for (int i = 0; i &lt; n - 1; i++) {
+        for (int j = 0; j &lt; n - i - 1; j++) {
+            if (a[j] &gt; a[j + 1]) {
+                int temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+            }
+        }
+    }
+}</code></pre>
+
+        <h3>11.5. Đệ quy</h3>
+        <p>
+          Đệ quy là kỹ thuật hàm gọi lại chính nó. Một hàm đệ quy phải có điều kiện dừng.
+        </p>
+        <pre><code>int factorial(int n) {
+    if (n == 0) return 1;
+    return n * factorial(n - 1);
+}</code></pre>
+
+        <div class="danger note">
+          <strong>Cẩn thận:</strong> Nếu thiếu điều kiện dừng, chương trình có thể bị tràn stack.
+        </div>
+      </section>
+
+      <section id="web-dev" class="knowledge-section">
+        <div class="section-header">
+          <h2>12. Lập trình Web cơ bản</h2>
+          <div><span class="tag prog-tag">HTML</span><span class="tag prog-tag">CSS</span><span class="tag prog-tag">JavaScript</span></div>
+        </div>
+
+        <h3>12.1. HTML</h3>
+        <p>
+          HTML định nghĩa cấu trúc nội dung của trang web.
+        </p>
+        <pre><code>&lt;h1&gt;Tiêu đề&lt;/h1&gt;
+&lt;p&gt;Đây là một đoạn văn.&lt;/p&gt;
+&lt;a href="https://github.com"&gt;GitHub&lt;/a&gt;</code></pre>
+
+        <h3>12.2. CSS</h3>
+        <p>
+          CSS dùng để định dạng giao diện: màu sắc, bố cục, kích thước, khoảng cách.
+        </p>
+        <pre><code>body {
+    background: #f6f8fb;
+    color: #172033;
+}</code></pre>
+
+        <h3>12.3. JavaScript</h3>
+        <p>
+          JavaScript giúp trang web có tương tác như tìm kiếm, lọc dữ liệu, xử lý sự kiện.
+        </p>
+        <pre><code>const button = document.querySelector("button");
+
+button.addEventListener("click", function () {
+    alert("Xin chào!");
+});</code></pre>
+
+        <h3>12.4. Request và Response</h3>
+        <p>
+          Khi trình duyệt gọi đến server, nó gửi một request. Server xử lý và trả về response.
+        </p>
+        <table>
+          <tr>
+            <th>Thành phần</th>
+            <th>Ý nghĩa</th>
+          </tr>
+          <tr>
+            <td>HTTP Method</td>
+            <td>GET, POST, PUT, PATCH, DELETE.</td>
+          </tr>
+          <tr>
+            <td>URL</td>
+            <td>Địa chỉ tài nguyên.</td>
+          </tr>
+          <tr>
+            <td>Headers</td>
+            <td>Thông tin bổ sung như Content-Type, Authorization.</td>
+          </tr>
+          <tr>
+            <td>Body</td>
+            <td>Dữ liệu gửi kèm request.</td>
+          </tr>
+        </table>
+      </section>
+
+      <section id="database" class="knowledge-section">
+        <div class="section-header">
+          <h2>13. Cơ sở dữ liệu</h2>
+          <div><span class="tag prog-tag">SQL</span><span class="tag prog-tag">Database</span></div>
+        </div>
+
+        <h3>13.1. Dữ liệu và thông tin</h3>
+        <p>
+          Dữ liệu là các giá trị thô. Thông tin là dữ liệu đã được xử lý và đặt trong ngữ cảnh có ý nghĩa.
+        </p>
+
+        <h3>13.2. Bảng, dòng, cột</h3>
+        <ul>
+          <li>Bảng: tập hợp dữ liệu cùng loại.</li>
+          <li>Dòng: một bản ghi cụ thể.</li>
+          <li>Cột: thuộc tính của bản ghi.</li>
+        </ul>
+
+        <h3>13.3. Khóa chính và khóa ngoại</h3>
+        <table>
+          <tr>
+            <th>Khái niệm</th>
+            <th>Ý nghĩa</th>
+          </tr>
+          <tr>
+            <td>Primary Key</td>
+            <td>Định danh duy nhất cho mỗi dòng trong bảng.</td>
+          </tr>
+          <tr>
+            <td>Foreign Key</td>
+            <td>Liên kết tới khóa chính của bảng khác.</td>
+          </tr>
+        </table>
+
+        <h3>13.4. SQL cơ bản</h3>
+        <pre><code>-- Lấy toàn bộ sinh viên
+SELECT * FROM Students;
+
+-- Lọc sinh viên có điểm GPA >= 8
+SELECT id, name, gpa
+FROM Students
+WHERE gpa >= 8;
+
+-- Sắp xếp giảm dần theo GPA
+SELECT *
+FROM Students
+ORDER BY gpa DESC;</code></pre>
+
+        <h3>13.5. JOIN</h3>
+        <pre><code>SELECT Students.name, Classes.class_name
+FROM Students
+JOIN Classes
+ON Students.class_id = Classes.id;</code></pre>
+      </section>
+
+      <section id="git-devops" class="knowledge-section">
+        <div class="section-header">
+          <h2>14. Git & DevOps</h2>
+          <div><span class="tag prog-tag">Git</span><span class="tag prog-tag">DevOps</span></div>
+        </div>
+
+        <h3>14.1. Git cơ bản</h3>
+        <p>
+          Git là hệ thống quản lý phiên bản mã nguồn. Nó giúp theo dõi lịch sử thay đổi và phối hợp làm việc nhóm.
+        </p>
+
+        <pre><code>git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/username/repository.git
+git push -u origin main</code></pre>
+
+        <h3>14.2. Các khái niệm quan trọng</h3>
+        <table>
+          <tr>
+            <th>Khái niệm</th>
+            <th>Ý nghĩa</th>
+          </tr>
+          <tr>
+            <td>Repository</td>
+            <td>Kho chứa mã nguồn.</td>
+          </tr>
+          <tr>
+            <td>Commit</td>
+            <td>Một mốc lưu thay đổi.</td>
+          </tr>
+          <tr>
+            <td>Branch</td>
+            <td>Nhánh phát triển độc lập.</td>
+          </tr>
+          <tr>
+            <td>Merge</td>
+            <td>Gộp nhánh.</td>
+          </tr>
+          <tr>
+            <td>Pull Request</td>
+            <td>Đề xuất gộp code và review.</td>
+          </tr>
+        </table>
+
+        <h3>14.3. DevOps</h3>
+        <p>
+          DevOps kết hợp development và operations, nhằm tự động hóa quy trình build, test, deploy.
+        </p>
+
+        <ul>
+          <li>CI: tự động build và test khi có code mới.</li>
+          <li>CD: tự động triển khai ứng dụng.</li>
+          <li>Docker: đóng gói ứng dụng vào container.</li>
+          <li>Jenkins/GitHub Actions: công cụ tự động hóa pipeline.</li>
+        </ul>
+      </section>
+
+      <section id="learning-method" class="knowledge-section">
+        <div class="section-header">
+          <h2>15. Cách học và ghi chú kiến thức</h2>
+          <div><span class="tag">Learning</span><span class="tag">Notes</span></div>
+        </div>
+
+        <h3>15.1. Mẫu ghi chú cho một chủ đề</h3>
+        <pre><code># Tên chủ đề
+
+## 1. Định nghĩa
+Ghi định nghĩa ngắn gọn.
+
+## 2. Ý nghĩa
+Chủ đề này dùng để làm gì?
+
+## 3. Công thức / Cú pháp
+Ghi công thức hoặc code mẫu.
+
+## 4. Ví dụ
+Có ít nhất một ví dụ dễ hiểu.
+
+## 5. Lỗi thường gặp
+Ghi các lỗi hay sai.
+
+## 6. Bài tập tự luyện
+Liệt kê bài tập từ dễ đến khó.</code></pre>
+
+        <h3>15.2. Nguyên tắc ghi chú tốt</h3>
+        <ul class="checklist">
+          <li>Mỗi trang chỉ nên tập trung vào một chủ đề chính.</li>
+          <li>Ưu tiên ví dụ cụ thể thay vì chỉ ghi lý thuyết.</li>
+          <li>Ghi lại lỗi sai của chính mình sau mỗi lần học.</li>
+          <li>Định kỳ quay lại sửa và bổ sung ghi chú.</li>
+        </ul>
+      </section>
+
+      <section id="github-pages" class="knowledge-section">
+        <div class="section-header">
+          <h2>16. Đưa file này lên GitHub Pages</h2>
+          <div><span class="tag">GitHub Pages</span><span class="tag">Deploy</span></div>
+        </div>
+
+        <h3>16.1. Cách dùng nhanh</h3>
+        <ol>
+          <li>Tạo repository mới trên GitHub, ví dụ <code>knowledge-site</code>.</li>
+          <li>Tạo file <code>index.html</code>.</li>
+          <li>Dán toàn bộ nội dung file này vào <code>index.html</code>.</li>
+          <li>Commit changes.</li>
+          <li>Vào <code>Repository → Settings → Pages</code>.</li>
+          <li>Chọn <code>Deploy from a branch</code>.</li>
+          <li>Chọn branch <code>main</code> và folder <code>/root</code>.</li>
+          <li>Bấm Save và chờ link website xuất hiện.</li>
+        </ol>
+
+        <h3>16.2. Lệnh Git nếu làm trên máy</h3>
+        <pre><code>git init
+git add index.html
+git commit -m "Add personal knowledge website"
+git branch -M main
+git remote add origin https://github.com/username/knowledge-site.git
+git push -u origin main</code></pre>
+
+        <div class="note">
+          <strong>Gợi ý mở rộng:</strong> Khi nội dung ngày càng nhiều, nên tách thành nhiều file:
+          <code>math.html</code>, <code>programming.html</code>, <code>database.html</code>,
+          <code>devops.html</code> để dễ quản lý hơn.
+        </div>
+      </section>
+    </main>
+  </div>
 
   <footer>
-    <p>© 2026 - Kho kiến thức cá nhân của tôi</p>
+    <p>© 2026 - Kho kiến thức cá nhân. Thiết kế cho GitHub Pages.</p>
+    <p><a href="#top">Quay lại đầu trang</a></p>
   </footer>
 
   <script>
     const searchInput = document.getElementById("searchInput");
-    const cards = document.querySelectorAll(".card");
+    const sections = document.querySelectorAll(".knowledge-section");
+
+    function removeMarks(element) {
+      element.querySelectorAll("mark").forEach(mark => {
+        mark.replaceWith(document.createTextNode(mark.textContent));
+      });
+    }
+
+    function highlightText(element, keyword) {
+      if (!keyword) return;
+
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || ["SCRIPT", "STYLE", "CODE", "PRE"].includes(parent.tagName)) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          if (node.nodeValue.toLowerCase().includes(keyword.toLowerCase())) {
+            return NodeFilter.FILTER_ACCEPT;
+          }
+          return NodeFilter.FILTER_REJECT;
+        }
+      });
+
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+
+      nodes.forEach(node => {
+        const text = node.nodeValue;
+        const regex = new RegExp("(" + keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "gi");
+        const span = document.createElement("span");
+        span.innerHTML = text.replace(regex, "<mark>$1</mark>");
+        node.parentNode.replaceChild(span, node);
+      });
+    }
 
     searchInput.addEventListener("input", function () {
-      const keyword = this.value.toLowerCase();
+      const keyword = this.value.trim().toLowerCase();
 
-      cards.forEach(function (card) {
-        const text = card.innerText.toLowerCase();
+      sections.forEach(section => {
+        removeMarks(section);
+        const text = section.innerText.toLowerCase();
 
-        if (text.includes(keyword)) {
-          card.style.display = "block";
+        if (keyword === "" || text.includes(keyword)) {
+          section.classList.remove("hidden");
+          highlightText(section, keyword);
         } else {
-          card.style.display = "none";
+          section.classList.add("hidden");
         }
       });
     });
   </script>
 </body>
 </html>
+'''
+
+path = Path("/mnt/data/kho_kien_thuc_toan_lap_trinh.html")
+path.write_text(html, encoding="utf-8")
+path
