@@ -1,1 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kho Kiến Thức Cá Nhân</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f8;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e293b, #334155);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 18px;
+      color: #cbd5e1;
+    }
+
+    nav {
+      background: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #1e293b;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: #2563eb;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .search-box {
+      margin-bottom: 30px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    .section-title {
+      margin: 30px 0 15px;
+      font-size: 26px;
+      color: #1e293b;
+      border-left: 5px solid #2563eb;
+      padding-left: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+      transition: 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .card h3 {
+      color: #2563eb;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: #475569;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-right: 5px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      padding: 25px;
+      background: #1e293b;
+      color: #cbd5e1;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 28px;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Kho Kiến Thức Cá Nhân</h1>
+    <p>Nơi lưu lại ghi chú học tập, lập trình, toán học và kinh nghiệm cá nhân</p>
+  </header>
+
+  <nav>
+    <a href="#lap-trinh">Lập trình</a>
+    <a href="#ctdl">Cấu trúc dữ liệu</a>
+    <a href="#toan">Toán học</a>
+    <a href="#devops">DevOps</a>
+  </nav>
+
+  <main class="container">
+    <div class="search-box">
+      <input 
+        type="text" 
+        id="searchInput" 
+        placeholder="Tìm kiếm kiến thức, ví dụ: con trỏ, stack, ma trận..."
+      />
+    </div>
+
+    <section id="lap-trinh">
+      <h2 class="section-title">Lập trình C/C++</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Con trỏ trong C</h3>
+          <p>
+            Con trỏ là biến dùng để lưu địa chỉ của một biến khác.
+            Đây là kiến thức quan trọng khi học cấp phát động, mảng và danh sách liên kết.
+          </p>
+          <span class="tag">C</span>
+          <span class="tag">Pointer</span>
+        </div>
+
+        <div class="card">
+          <h3>Mảng một chiều</h3>
+          <p>
+            Mảng là cấu trúc lưu nhiều phần tử cùng kiểu dữ liệu trên vùng nhớ liên tiếp.
+            Có thể dùng để lưu danh sách điểm, danh sách số nguyên, dữ liệu thống kê.
+          </p>
+          <span class="tag">Array</span>
+          <span class="tag">Basic</span>
+        </div>
+
+        <div class="card">
+          <h3>Chuỗi ký tự</h3>
+          <p>
+            Trong C, chuỗi là mảng ký tự kết thúc bằng ký tự '\0'.
+            Cần chú ý kích thước mảng khi nhập chuỗi để tránh tràn bộ nhớ.
+          </p>
+          <span class="tag">String</span>
+          <span class="tag">C</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="ctdl">
+      <h2 class="section-title">Cấu trúc dữ liệu</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Danh sách liên kết đơn</h3>
+          <p>
+            Danh sách liên kết đơn gồm nhiều node, mỗi node chứa dữ liệu và con trỏ trỏ đến node kế tiếp.
+            Ưu điểm là thêm/xóa linh hoạt, không cần vùng nhớ liên tiếp.
+          </p>
+          <span class="tag">Linked List</span>
+          <span class="tag">Node</span>
+        </div>
+
+        <div class="card">
+          <h3>Stack</h3>
+          <p>
+            Stack hoạt động theo nguyên tắc LIFO: phần tử vào sau sẽ ra trước.
+            Ứng dụng trong kiểm tra dấu ngoặc, khử đệ quy, undo/redo.
+          </p>
+          <span class="tag">Stack</span>
+          <span class="tag">LIFO</span>
+        </div>
+
+        <div class="card">
+          <h3>Queue</h3>
+          <p>
+            Queue hoạt động theo nguyên tắc FIFO: phần tử vào trước sẽ ra trước.
+            Ứng dụng trong hàng đợi xử lý tác vụ, BFS, mô phỏng hệ thống.
+          </p>
+          <span class="tag">Queue</span>
+          <span class="tag">FIFO</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="toan">
+      <h2 class="section-title">Toán học</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Ma trận</h3>
+          <p>
+            Ma trận là bảng số gồm các hàng và cột.
+            Trong lập trình và machine learning, ma trận dùng để biểu diễn dữ liệu, phép biến đổi và hệ phương trình.
+          </p>
+          <span class="tag">Linear Algebra</span>
+          <span class="tag">Matrix</span>
+        </div>
+
+        <div class="card">
+          <h3>Không gian vector</h3>
+          <p>
+            Không gian vector là tập hợp các vector thỏa mãn phép cộng và nhân vô hướng.
+            Đây là nền tảng của đại số tuyến tính.
+          </p>
+          <span class="tag">Vector</span>
+          <span class="tag">Math</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="devops">
+      <h2 class="section-title">DevOps</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Git cơ bản</h3>
+          <p>
+            Git giúp quản lý phiên bản mã nguồn.
+            Các lệnh quan trọng gồm git init, git add, git commit, git push và git pull.
+          </p>
+          <span class="tag">Git</span>
+          <span class="tag">Version Control</span>
+        </div>
+
+        <div class="card">
+          <h3>Docker</h3>
+          <p>
+            Docker giúp đóng gói ứng dụng cùng môi trường chạy vào container.
+            Điều này giúp ứng dụng chạy ổn định trên nhiều máy khác nhau.
+          </p>
+          <span class="tag">Docker</span>
+          <span class="tag">Container</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 - Kho kiến thức cá nhân của tôi</p>
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById("searchInput");
+    const cards = document.querySelectorAll(".card");
+
+    searchInput.addEventListener("input", function () {
+      const keyword = this.value.toLowerCase();
+
+      cards.forEach(function (card) {
+        const text = card.innerText.toLowerCase();
+
+        if (text.includes(keyword)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
